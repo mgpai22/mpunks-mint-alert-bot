@@ -64,21 +64,24 @@ subscription721.on('data', async event => {
 
         try {
 
+            if (transaction.from === '0x0000000000000000000000000000000000000000') {
 
-            console.log(`\n` +
-                `New ERC-712 transaction found in block ${event.blockNumber} with hash ${event.transactionHash}\n` +
-                `From: ${(transaction.from === '0x0000000000000000000000000000000000000000') ? 'New mint!' : transaction.from}\n` +
-                `To: ${transaction.to}\n` +
-                `Token contract: Mpunks\n` +
-                `Token ID: ${transaction.tokenId}`
-            );
 
-            let update = transaction.from === '0x0000000000000000000000000000000000000000' ? `Mint of Mpunk ${transaction.tokenId}` : null;
+                console.log(`\n` +
+                    `New ERC-712 transaction found in block ${event.blockNumber} with hash ${event.transactionHash}\n` +
+                    `From: ${(transaction.from === '0x0000000000000000000000000000000000000000') ? 'New mint!' : transaction.from}\n` +
+                    `To: ${transaction.to}\n` +
+                    `Token contract: Mpunks\n` +
+                    `Token ID: ${transaction.tokenId}`
+                );
 
-            await new Promise(resolve => setTimeout(resolve, 5000)); // sleep of 5 seconds for the api to catch up
+                let update = `Mint of Mpunk ${transaction.tokenId}`;
 
-            let link = await getPNGLink(transaction.tokenId)
-            sendWebhook(update, parseInt(transaction.tokenId), transaction.from, transaction.to, event.transactionHash, event.blockNumber, link.link)
+                await new Promise(resolve => setTimeout(resolve, 5000)); // sleep of 5 seconds for the api to catch up
+
+                let link = await getPNGLink(transaction.tokenId)
+                sendWebhook(update, parseInt(transaction.tokenId), transaction.from, transaction.to, event.transactionHash, event.blockNumber, link.link)
+            }
 
 
         } catch (err) {
