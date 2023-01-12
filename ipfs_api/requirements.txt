@@ -1,0 +1,5 @@
+CairoSVG
+fastapi
+pinata
+python-dotenv
+uvicorn
