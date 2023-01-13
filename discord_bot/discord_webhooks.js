@@ -13,12 +13,15 @@ const webhookClient = new WebhookClient({
 });
 
 async function getMetaData(tokenID) {
+    while(true) {
     try {
         const response = await axios.get(`https://api.mpunks.org/metadata/${tokenID}/`);
         return response.data;
     } catch (error) {
         console.error(error);
     }
+    await new Promise(resolve => setTimeout(resolve, 5000));
+}
 }
 
 async function constructMetadata(metadata) {
@@ -47,12 +50,15 @@ async function checkBurnable(tokenID) {
 }
 
 async function getPoolNonces() {
+    while(true) {
     try {
         const response = await axios.get(`http://mpunkspool.com/nonces.txt`);
         return response.data;
     } catch (error) {
         console.error(error);
     }
+    await new Promise(resolve => setTimeout(resolve, 5000));
+}
 }
 
 //Embeds allow masked links (e.g. [Guide](https://discordjs.guide/ 'optional hovertext')), but only in description and field values
