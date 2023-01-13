@@ -87,7 +87,7 @@ subscription721.on('data', async event => {
                         }
                     } catch(err) {
                         // handle error
-                        console.log(err)
+                        console.log("error with fetching link")
                     }
                     await new Promise(resolve => setTimeout(resolve, 5000));
                 }
