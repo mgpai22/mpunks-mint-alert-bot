@@ -18,7 +18,7 @@ async function getMetaData(tokenID) {
         const response = await axios.get(`https://api.mpunks.org/metadata/${tokenID}/`);
         return response.data;
     } catch (error) {
-        console.error(error);
+        console.error("metadata error");
     }
     await new Promise(resolve => setTimeout(resolve, 5000));
 }
@@ -55,7 +55,7 @@ async function getPoolNonces() {
         const response = await axios.get(`http://mpunkspool.com/nonces.txt`);
         return response.data;
     } catch (error) {
-        console.error(error);
+        console.error("pool nonces errors");
     }
     await new Promise(resolve => setTimeout(resolve, 5000));
 }
