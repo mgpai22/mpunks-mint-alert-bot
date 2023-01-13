@@ -77,9 +77,21 @@ subscription721.on('data', async event => {
 
                 let update = `Mint of Mpunk ${transaction.tokenId}`;
 
-                await new Promise(resolve => setTimeout(resolve, 5000)); // sleep of 5 seconds for the api to catch up
+                let link;
 
-                let link = await getPNGLink(transaction.tokenId)
+                while(true) {
+                    try {
+                        link = await getPNGLink(transaction.tokenId);
+                        if(link.link !== 'Mpunk does not exist') {
+                            break;
+                        }
+                    } catch(err) {
+                        // handle error
+                        console.log(err)
+                    }
+                    await new Promise(resolve => setTimeout(resolve, 5000));
+                }
+                
                 sendWebhook(update, parseInt(transaction.tokenId), transaction.from, transaction.to, event.transactionHash, event.blockNumber, link.link)
             }
 
