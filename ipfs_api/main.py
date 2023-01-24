@@ -1,13 +1,9 @@
-import os
-
+import asyncio
 from fastapi import FastAPI, status
 import cairosvg
 from fastapi.responses import JSONResponse
-from pinata import Pinata
-from dotenv import load_dotenv
 from SQL_functions import write_to_mpunks_table, query_mpunks_table
-
-load_dotenv()
+from ipfs import main
 
 app = FastAPI()
 
@@ -23,10 +19,14 @@ def convert_and_upload(token_id):
         cairosvg.svg2png(url=f'https://api.mpunks.org/image/{token_id}.svg', write_to=f'./data/{token_id}.png', scale=100)
     except Exception as e:
         return "Not Found"
-    pinata = Pinata(os.getenv("PINATA_API_KEY"), os.getenv("PINATA_SECRET_KEY"), os.getenv("PINATA_ACCESS_TOKEN"))
+
     file = f'./data/{token_id}.png'
-    response = pinata.pin_file(file)
-    link = response['data']['IpfsHash']
+
+    # asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+    res = asyncio.run(main(file))
+
+    link = res['value']['cid']
+
     try:
         write_to_mpunks_table("mpunks", "mpunks_table", token_id, link)
     except Exception as e:
@@ -54,4 +54,4 @@ async def say_hello(token_id):
     if link == "Not Found":
         return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST,
                             content={"link": f"Mpunk does not exist"})
-    return {"link": f"https://ipfs.moralis.io:2053/ipfs/{link}"}
+    return {"link": f"https://nftstorage.link/ipfs/{link}"}

@@ -1,5 +1,4 @@
 CairoSVG
 fastapi
-pinata
+aiohttp
 python-dotenv
-uvicorn
